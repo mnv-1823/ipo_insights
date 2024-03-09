@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:ipo_insights/components/MailineCurrent.dart';
 import 'package:ipo_insights/components/MainlineListed.dart';
@@ -5,8 +6,27 @@ import 'package:ipo_insights/components/MainlineUpcoming.dart';
 
 import 'loginPage.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+
+  final user = FirebaseAuth.instance.currentUser;
+  int _selectedIndex = 0;
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
+  signout()async{
+    await FirebaseAuth.instance.signOut();
+  }
 
   Future<void> _showSearchDialog(BuildContext context) async {
     return showDialog(
@@ -51,7 +71,6 @@ class HomeScreen extends StatelessWidget {
             IconButton(
               icon: Icon(Icons.notifications),
               onPressed: () {
-
               },
             ),
           ],
@@ -64,49 +83,57 @@ class HomeScreen extends StatelessWidget {
               Tab(text: 'Listed')
             ],
           ),
+          
         ),
 
-        body: const TabBarView(
+        body: IndexedStack(
+          index: _selectedIndex,
+          children: [
+            const TabBarView(
 
-          children:[ SingleChildScrollView(
-            child: Padding(
-              padding: EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  MainlineCurrent(),
-                ],
-              ),
-            ),
-          ),
-            //---------Upcoming---------
-            SingleChildScrollView(
-              child: Padding(
-                padding: EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    MainlineUpcoming(),
-                  ],
+              children:[ SingleChildScrollView(
+                child: Padding(
+                  padding: EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      MainlineCurrent(),
+                    ],
+                  ),
                 ),
               ),
-            ),
 
-            //---------Listed------------
-            SingleChildScrollView(
-              child: Padding(
-                padding: EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    MainlineListed(),
-                  ],
+                //---------Upcoming---------
+
+                SingleChildScrollView(
+                  child: Padding(
+                    padding: EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        MainlineUpcoming(),
+                      ],
+                    ),
+                  ),
                 ),
-              ),
+
+                //---------Listed------------
+                SingleChildScrollView(
+                  child: Padding(
+                    padding: EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        MainlineListed(),
+                      ],
+                    ),
+                  ),
+                ),
+
+
+              ]
             ),
-
-
-          ]
+          ],
         ),
         drawer: Drawer(
           child: ListView(
@@ -117,7 +144,7 @@ class HomeScreen extends StatelessWidget {
                   color: Colors.purple[700],
                 ),
                 child: Text(
-                  'Welcome Investor!',
+                  'Welcome Investor! ${user!.email}',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 20,
@@ -146,14 +173,39 @@ class HomeScreen extends StatelessWidget {
               ),
               ListTile(
                 title: Text('Logout'),
-                onTap: () {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (context) => LoginScreen()),);
-                },
+                onTap: (()=>signout()) ,
               ),
             ],
           ),
+        ),
+        bottomNavigationBar: BottomNavigationBar(
+
+          items:  <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            //backgroundColor: Colors.white10,
+            icon: Icon(Icons.bar_chart_rounded,color: Colors.purple[700],),
+            label: 'Mainline',
+          ),
+          BottomNavigationBarItem(
+          icon: Icon(Icons.business_sharp,color: Colors.purple[700],),
+          label: 'SME',
+        ),
+         BottomNavigationBarItem(
+              icon: Icon(Icons.star,color: Colors.purple[700],),
+              label: 'Wishlist' ,
+            ),
+         BottomNavigationBarItem(
+              icon: Icon(Icons.newspaper,color: Colors.purple[700],),
+              label: 'NEWS',
+            ),
+
+          ],
+          currentIndex: _selectedIndex,
+          selectedItemColor: Colors.purple,
+          onTap: _onItemTapped,
+          elevation: 5,
+          iconSize: 25,
+          type: BottomNavigationBarType.shifting,
         ),
       ),
     );

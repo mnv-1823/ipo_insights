@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "901000688539",
+    "project_id": "ipo-insights",
+    "storage_bucket": "ipo-insights.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:901000688539:android:3b5cf2a5a20e19e58ea73e",
+        "android_client_info": {
+          "package_name": "com.example.ipo_insights"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCwj_gtKH2jUGCd6tpa_zX61glujfK2Mmk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

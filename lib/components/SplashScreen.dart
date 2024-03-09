@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ipo_insights/components/Wrapper.dart';
 
 import 'loginPage.dart';
 
@@ -18,7 +19,7 @@ class _SplashScreenState extends State<SplashScreen> {
     Future.delayed(Duration(seconds: 3), () {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => LoginScreen()),
+        MaterialPageRoute(builder: (context) => Wrapper()),
       );
     });
   }

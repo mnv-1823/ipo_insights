@@ -1,9 +1,12 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:ipo_insights/main.dart';
 //import 'package:fluttertoast/fluttertoast.dart';
 import 'ForgotPasswordScreen.dart';
 import 'HomeScreen.dart';
 import 'SignUpScreen.dart';
+import 'package:ipo_insights/firebase_options.dart';
 
 
 
@@ -15,6 +18,12 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   TextEditingController _usernameController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
+
+  signIn()async{
+    await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: _usernameController.text,
+        password: _passwordController.text);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,9 +53,9 @@ class _LoginScreenState extends State<LoginScreen> {
               TextField(
                 controller: _usernameController,
                 decoration: InputDecoration(
-                  labelText: 'Username',
+                  labelText: 'Email',
                   border: OutlineInputBorder(),
-                  prefixIcon: Icon(Icons.person),
+                  prefixIcon: Icon(Icons.mail),
                 ),
               ),
               SizedBox(height: 16.0),
@@ -68,7 +77,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       // Navigate to the SignUpScreen
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => SignUpScreen()),
+                        MaterialPageRoute(builder: (context) => SignUpPage()),
                       );
                     },
                     child: Text('Sign Up'),
@@ -89,22 +98,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
               SizedBox(height: 32.0),
               ElevatedButton(
-                onPressed: () {
-
-
-
-                  String username = _usernameController.text;
-                  String password = _passwordController.text;
-
-
-                  if (username == 'admin' && password == 'admin') {
-
-                    Navigator.pushReplacement(context,
-                        MaterialPageRoute(builder: (context)=>HomeScreen()),);
-                  } else {
-
-                  }
-                },
+                onPressed: (()=>signIn()),
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
                   child: Text(
